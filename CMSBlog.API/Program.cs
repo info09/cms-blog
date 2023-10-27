@@ -1,5 +1,6 @@
 using CMSBlog.API;
 using CMSBlog.Core.Domain.Identity;
+using CMSBlog.Core.Models.Content;
 using CMSBlog.Core.SeedWorks;
 using CMSBlog.Data;
 using CMSBlog.Data.Repositories;
@@ -53,6 +54,8 @@ foreach (var service in services)
         builder.Services.Add(new ServiceDescriptor(directInterface, service, ServiceLifetime.Scoped));
     }
 }
+
+builder.Services.AddAutoMapper(typeof(PostInListDto));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
