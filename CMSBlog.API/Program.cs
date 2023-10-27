@@ -1,5 +1,8 @@
+using CMSBlog.API;
 using CMSBlog.Core.Domain.Identity;
+using CMSBlog.Core.SeedWorks;
 using CMSBlog.Data;
+using CMSBlog.Data.SeedWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 var connectString = configuration.GetConnectionString("DefaultConnection");
 
-// Add services to the container.
+
 
 //Config DbContext and Asp.net Identity
 builder.Services.AddDbContext<CMSBlogContext>(options => options.UseSqlServer(connectString));
@@ -32,6 +35,10 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = false;
 });
+
+// Add services to the container.
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(RepositoryBase<,>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 builder.Services.AddControllers();
