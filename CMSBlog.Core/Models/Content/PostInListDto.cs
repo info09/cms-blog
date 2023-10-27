@@ -1,4 +1,5 @@
 using AutoMapper;
+using CMSBlog.Core.Domain.Content;
 
 namespace CMSBlog.Core.Models.Content
 {
@@ -14,7 +15,10 @@ namespace CMSBlog.Core.Models.Content
 
         public class AutoMapperProfiles : Profile
         {
-            public AutoMapperProfiles() { }
+            public AutoMapperProfiles() 
+            {
+                CreateMap<Post, PostInListDto>();
+            }
         }
     }
 }
