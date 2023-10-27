@@ -2,7 +2,8 @@ using CMSBlog.API;
 using CMSBlog.Core.Domain.Identity;
 using CMSBlog.Core.SeedWorks;
 using CMSBlog.Data;
-using CMSBlog.Data.SeedWork;
+using CMSBlog.Data.Repositories;
+using CMSBlog.Data.SeedWorks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,6 +41,18 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(RepositoryBase<,>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+// Business services and repositories
+var services = typeof(PostRepository).Assembly.GetTypes().Where(i => i.GetInterfaces().Any(i => i.Name == typeof(IRepository<,>).Name) && !i.IsAbstract && i.IsClass && !i.IsGenericType);
+
+foreach (var service in services)
+{
+    var allInterface = service.GetInterfaces();
+    var directInterface = allInterface.Except(allInterface.SelectMany(i => i.GetInterfaces())).FirstOrDefault();
+    if(directInterface != null)
+    {
+        builder.Services.Add(new ServiceDescriptor(directInterface, service, ServiceLifetime.Scoped));
+    }
+}
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
